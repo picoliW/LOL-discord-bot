@@ -25,7 +25,7 @@ async def on_message(message):
         return
     
     if message.content.startswith('l!help'):
-        await message.channel.send("Comandos disponíveis: l!fala, l!skill")
+        await message.channel.send("Comandos disponíveis: l!fala, l!skill, l!personagem")
 
 
     if message.content.startswith('l!personagem'):
