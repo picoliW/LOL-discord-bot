@@ -5,6 +5,7 @@ import asyncio
 import random 
 from utils.habilidades import habilidades
 from utils.falas import falas
+from utils.personagens import personagens
 
 load_dotenv()
 
@@ -25,6 +26,81 @@ async def on_message(message):
     
     if message.content.startswith('l!help'):
         await message.channel.send("Comandos disponíveis: l!fala, l!skill")
+
+
+    if message.content.startswith('l!personagem'):
+        personagem_aleatorio, info_aleatoria = random.choice(list(personagens.items()))
+
+        await message.channel.send("Tente adivinhar o nome de um personagem!")
+
+        tentativas = 7
+
+        try:
+            for attempt in range(tentativas):
+                def check(m):
+                    return m.author == message.author and m.channel == message.channel
+
+                user_guess = await client.wait_for('message', check=check, timeout=120)
+
+                personagem_usuario = user_guess.content.lower()
+
+                if personagem_usuario == personagem_aleatorio:
+                    await message.channel.send(f"Parabéns! Você acertou o personagem: **{personagem_aleatorio}**!")
+                    return 
+
+                elif personagem_usuario in personagens:
+                    info_usuario = personagens[personagem_usuario]
+                    
+                    resposta = f"Sua tentativa: **{personagem_usuario}**\n"
+
+                    todos_corretos = True
+                    algum_correto = False
+                    
+                    for key in info_usuario:
+                        usuario_value = info_usuario[key]
+                        aleatorio_value = info_aleatoria[key]
+
+                        if isinstance(usuario_value, list):
+                            if any(v in aleatorio_value for v in usuario_value):
+                                resposta += f"{key}: {', '.join(usuario_value)} 🟨\n"
+                                algum_correto = True
+                            else:
+                                resposta += f"{key}: {', '.join(usuario_value)} ❌\n"
+                                todos_corretos = False
+                        else:
+                            if usuario_value == aleatorio_value:
+                                resposta += f"{key}: {usuario_value} ✅\n"
+                            else:
+                                resposta += f"{key}: {usuario_value} ❌\n"
+                                todos_corretos = False
+                            if usuario_value in aleatorio_value:
+                                algum_correto = True
+
+                    if todos_corretos:
+                        await message.channel.send(f"Você acertou! Personagem: {resposta}")
+                        return
+                    elif algum_correto:
+                        await message.channel.send(resposta)
+                    else:
+                        await message.channel.send(f"Você errou todas as informações! {resposta}")
+
+                    remaining_attempts = tentativas - (attempt + 1)
+                    if remaining_attempts > 0:
+                        await message.channel.send(f"Tentativas restantes: {remaining_attempts}")
+                    else:
+                        await message.channel.send(f"Você usou todas as tentativas! O personagem correto era: **{personagem_aleatorio}**")
+                        return
+
+                else:
+                    remaining_attempts = tentativas - (attempt + 1)
+                    if remaining_attempts > 0:
+                        await message.channel.send(f"Personagem não encontrado! Você tem mais {remaining_attempts} tentativa(s).")
+                    else:
+                        await message.channel.send(f"Você usou todas as tentativas! O personagem correto era: **{personagem_aleatorio}**")
+                        return
+
+        except asyncio.TimeoutError:
+            await message.channel.send("Você demorou muito para responder!")
     
     if message.content.startswith('l!fala'):
         fala, autor = random.choice(list(falas.items()))
