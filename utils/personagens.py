@@ -143,7 +143,7 @@ personagens = {
         "Regiao" : "Zaun",
         "Ano de Lancamento" : "2009",
     },
-    "Brand": {
+    "brand": {
         "Genero" : "Homem",
         "Posicao" : ["Jungle", "Suporte"],
         "Especie" : ["Humano", "Alterado Magicamente"],
