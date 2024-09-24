@@ -289,7 +289,7 @@ personagens = {
     },
     "ezreal": {
         "Genero" : "Homem",
-        "Posicao" : "Atirador",
+        "Posicao" : "ADC",
         "Especie" : ["Humano", "Mago"],
         "Recurso" : "Mana",
         "Tipo de Alcance" : "Longo Alcance",
@@ -1135,7 +1135,7 @@ personagens = {
     },
     "smolder": {
         "Genero" : "Homem",
-        "Posicao" : "Atirador",
+        "Posicao" : "ADC",
         "Especie" : "Dragao",
         "Recurso" : "Mana",
         "Tipo de Alcance" : "Longo Alcance",
